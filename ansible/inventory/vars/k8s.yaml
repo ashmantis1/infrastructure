@@ -73,7 +73,7 @@ rke2_servers_group_name: k8s_masters
 rke2_agents_group_name: k8s_workers
 rke2_download_kubeconf: true
 rke2_download_kubeconf_path: /home/asher/.kube
-rke2_download_kubeconf_file_name: rke2-kubeconfig.yaml
+rke2_download_kubeconf_file_name: rke2-kubeconfig-tmp-admin.yaml
 
 rke2_interface: eth0
 bind_address: "{{ hostvars[inventory_hostname]['ansible_' + rke2_interface]['ipv4']['address'] }}"
