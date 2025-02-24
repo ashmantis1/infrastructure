@@ -1,0 +1,25 @@
+aap_hostname: "https://ansible.apps.ashman.world"
+aap_username: svc-ansible-awx
+aap_password: "password123"
+aap_validate_certs: true
+
+organization: ashman
+controller_inventories:
+  - name: proxmox_hosts
+    description: Hosts sourced from proxmox
+    organization: "{{ organization }}"
+controller_inventory_sources:
+  - name: proxmox-dynamic
+    inventory: proxmox_hosts
+    description: Proxmox dynamic inventory file
+    credential: proxmox
+    source: scm
+    source_path: "ansible/inventory/awx.proxmox.yml"
+    source_project: Infrastructure
+    update_on_launch: true
+
+
+        
+        
+        
+

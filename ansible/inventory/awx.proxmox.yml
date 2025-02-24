@@ -2,7 +2,7 @@ plugin: community.general.proxmox
 url: https://10.110.0.50:8006
 validate_certs: false
 user: root@pam
-token_id: ansible
+token_id: ansible-awx
 want_facts: true
 want_proxmox_nodes_ansible_host: false
 groups:
