@@ -1,0 +1,9 @@
+- name: Destroy vault infrastructure
+  hosts: pve_minio
+  tasks:
+    - name: Update host
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+        update_cache: true
+
