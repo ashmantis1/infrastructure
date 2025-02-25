@@ -1,5 +1,6 @@
 - name: Destroy vault infrastructure
   hosts: pve_minio
+  become: true
   vars_files:
     - inventory/vars/minio.yaml
   tasks:
