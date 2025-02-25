@@ -47,4 +47,5 @@ network:
       k8s: 110
       minio: 120
       vault: 130
+      execution_node: 135
 

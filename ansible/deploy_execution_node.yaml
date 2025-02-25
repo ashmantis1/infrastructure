@@ -1,0 +1,50 @@
+- name: Deploy Execution Node/s
+  hosts: localhost
+  vars_files:
+    - inventory/vars/execution_node.yaml
+  tasks:
+    - name: Deploy nodes on proxmox
+      ansible.builtin.include_role:
+        name: proxmox_nodes
+      vars:
+        state: present
+
+    - meta: refresh_inventory
+
+    - name: Wait for each host to be joined in IPA
+      ansible.builtin.include_role:
+        name: wait_host_joined
+      vars:
+        joined_hosts: "{{ groups['pve_execution_node'] | list }}" 
+
+    - name: Short delay for final stages of join
+      ansible.builtin.pause:
+        seconds: 5
+
+- name: Configure execution node
+  hosts: pve_execution_node
+  become: true
+  gather_facts: true
+  vars_files:
+    - inventory/vars/execution_node.yaml
+  tasks:
+    - name: Update host
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+        update_cache: true
+
+    - name: Install requirements
+      ansible.builtin.package:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - slirp4netns
+
+    - name: Add firewalld rule
+      ansible.posix.firewalld:
+        port: "{{ listener_port }}/tcp"
+        immediate: true
+        permanent: true
+        state: enabled
+

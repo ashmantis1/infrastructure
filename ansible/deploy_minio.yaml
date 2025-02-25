@@ -15,14 +15,14 @@
       ansible.builtin.include_role:
         name: wait_host_joined
       vars:
-        joined_hosts: "{{ groups['minio'] | list }}" 
+        joined_hosts: "{{ groups['pve_minio_primary'] | list }}" 
 
     - name: Short delay for final stages of join
       ansible.builtin.pause:
         seconds: 5
 
 - name: Deploy Minio
-  hosts: minio
+  hosts: pve_minio_primary
   become: true
   gather_facts: true
   vars_files:

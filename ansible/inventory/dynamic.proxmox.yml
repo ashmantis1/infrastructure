@@ -13,24 +13,30 @@ token_secret: !vault |
           3530653561346361313936376531343131663464636166363361
 want_facts: true
 want_proxmox_nodes_ansible_host: false
+exclude_nodes: true
+keyed_groups:
+  - key: proxmox_tags_parsed
+    separator: ""
+    prefix: pve-
 groups:
   # Freeipa
   freeipaservers: "'ipa' in (proxmox_tags_parsed|list)"
-  ipamaster: "'ipaprimary' in (proxmox_tags_parsed|list)"
-  ipareplica: "'ipasecondary' in (proxmox_tags_parsed|list)"
+  ipamaster: "'ipa-primary' in (proxmox_tags_parsed|list)"
+  ipareplica: "'ipa-secondary' in (proxmox_tags_parsed|list)"
   # Pihole
   pihole_cluster: "'pihole' in (proxmox_tags_parsed|list)"
-  master: "'piholeprimary' in (proxmox_tags_parsed|list)"
-  backup: "'piholesecondary' in (proxmox_tags_parsed|list)"
+  master: "'pihole-primary' in (proxmox_tags_parsed|list)"
+  backup: "'pihole-secondary' in (proxmox_tags_parsed|list)"
   # K8S
   k8s_cluster: "'kube-infra' in (proxmox_tags_parsed|list)"
-  k8s_masters: "'kube-infraprimary' in (proxmox_tags_parsed|list)"
-  k8s_workers: "'kube-infrasecondary' in (proxmox_tags_parsed|list)"
+  k8s_masters: "'kube-infra-primary' in (proxmox_tags_parsed|list)"
+  k8s_workers: "'kube-infra-secondary' in (proxmox_tags_parsed|list)"
   # minio
-  minio:  "'minioprimary' in (proxmox_tags_parsed|list)"
+  minio:  "'minio-primary' in (proxmox_tags_parsed|list"
   # Vault
   vault:  "'vault' in (proxmox_tags_parsed|list)"
 compose:
   ansible_host: proxmox_agent_interfaces[1]["ip-addresses"][0].split('/')[0]
   ansible_ssh_user: asher
   ansible_ssh_private_key_file: ~/.ssh/id_ed25519
+  ansible_host_key_checking: false

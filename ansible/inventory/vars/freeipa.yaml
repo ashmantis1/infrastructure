@@ -203,6 +203,14 @@ ipa_service_accounts:
     password: "{{ vault_ipa_service_accounts.svc_svck8s_vault.password }}"
     groups:
       - vault-svc-secrets-ro
+  - name: svc-ansible-awx
+    first: Svc
+    last: Vault
+    loginshell: "/sbin/nologin"
+    passwordexpiration: "2099-01-01 23:59:59"
+    password: "{{ vault_ipa_service_accounts.svc_ansible_awx.password }}"
+    groups:
+      - awx-admins
 
 ipa_permissions:
   - name: "Modify Host - Description"
@@ -232,9 +240,14 @@ ipa_roles:
 
 ipa_services_groups:
   - name: gitlab-admins
+  - name: gitlab-users
   - name: vault-admins
   - name: jellyfin-admins
   - name: jellyfin-users
+  - name: sonarr-admins
+  - name: prowlarr-admins
+  - name: radarr-admins
+  - name: qbittorrent-admins
   - name: minio-admins
   - name: keycloak-admins
   - name: awx-admins
@@ -245,6 +258,7 @@ ipa_usergroups:
   - name: services-admins
     groups:
       - gitlab-admins
+      - gitlab-users
   - name: infra-admins
     groups:
       - vault-admins
@@ -258,7 +272,10 @@ ipa_usergroups:
   - name: media-admins
     groups:
       - jellyfin-admins
-  - name: service-accounts
+      - sonarr-admins
+      - prowlarr-admins
+      - radarr-admins
+      - qbittorrent-admins
 
 ipa_hostgroups:
   - name: services

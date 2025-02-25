@@ -1,9 +1,21 @@
 aap_hostname: "https://ansible.apps.ashman.world"
 aap_username: svc-ansible-awx
-aap_password: "password123"
+aap_password: "{{ vault_ipa_service_accounts.svc_ansible_awx.password }}"
 aap_validate_certs: true
-
 organization: ashman
+
+aap_configuration_async_retries: 200
+controller_projects:
+  - name: Infrastructure
+    organization: "{{ organization }}"
+    scm_type: git
+    scm_url: "https://github.com/ashmantis1/infrastructure.git"
+    scm_update_on_launch: true
+  - name: Inventories
+    organization: "{{ organization }}"
+    scm_type: git
+    scm_url: "https://gitlab.apps.ashman.world/infra/ansible-inventory.git"
+    scm_update_on_launch: false
 controller_inventories:
   - name: proxmox_hosts
     description: Hosts sourced from proxmox
@@ -14,12 +26,27 @@ controller_inventory_sources:
     description: Proxmox dynamic inventory file
     credential: proxmox
     source: scm
-    source_path: "ansible/inventory/awx.proxmox.yml"
-    source_project: Infrastructure
+    source_path: "awx.proxmox.yml"
+    source_project: Inventories
     update_on_launch: true
-
-
-        
-        
-        
-
+controller_credential_types:
+  - name: Proxmox-API-Token
+    description: API Token for proxmox
+    inputs:
+      fields:
+      - id: token
+        type: string
+        label: token
+        secret: true
+      required:
+        - token
+    injectors:
+      env:
+        PROXMOX_TOKEN_SECRET: !unsafe "{{ token }}"
+controller_credentials:
+  - name: proxmox
+    description: Proxmox API token credentials
+    organization: "{{ organization }}"
+    credential_type: Proxmox-API-Token
+    inputs:
+      token: "{{ vault_awx.proxmox_api_token }}"
