@@ -1,5 +1,7 @@
 - name: Destroy vault infrastructure
   hosts: pve_minio
+  vars_files:
+    - inventory/vars/minio.yaml
   tasks:
     - name: Update host
       ansible.builtin.dnf:
