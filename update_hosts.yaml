@@ -1,20 +1,19 @@
 - name: Destroy vault infrastructure
   hosts: pve_ipajoined
-  become: true
+  vars:
+    infra_group: "pve_infra"
   tasks:
-
     - name: Set ansible host connection variables
       ansible.builtin.set_fact:
         ansible_user: svc-ansible-infra
         ansible_ssh_pass: "{{ vault_ipa_service_accounts.svc_ansible_infra.password }}"
         ansible_become_pass: "{{ vault_ipa_service_accounts.svc_ansible_infra.password }}"
-      when: 'pve_infra' in group_names
-      delegate_to: 127.0.0.1
-      run_once: true
+      when: infra_group in group_names
 
     - name: Update host
       ansible.builtin.dnf:
         name: "*"
         state: latest
         update_cache: true
+      become: true
 

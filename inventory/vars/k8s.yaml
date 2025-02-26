@@ -13,7 +13,7 @@ vm:
   count: 3
   primary_count: 3
   cpu: 8
-  memory: 12228
+  memory: 16384
   disk_size: 200 # Disk size for root drive of VM in GB
   storage_pool: "local-lvm"
   bridge: "svcnet"

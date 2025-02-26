@@ -9,7 +9,7 @@ vm:
   count: 3
   primary_count: 1
   cpu: 4
-  memory: 4096
+  memory: 6144
   disk_size: 30 # Disk size for root drive of VM in GB
   storage_pool: "local-lvm"
   bridge: "vmbr0"
