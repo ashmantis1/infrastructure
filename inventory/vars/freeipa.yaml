@@ -187,6 +187,12 @@ ipa_service_accounts:
     loginshell: "/sbin/nologin"
     passwordexpiration: "2099-01-01 23:59:59"
     password: "{{ vault_ipa_service_accounts.svc_awx_bind.password }}"
+  - name: svc-authelia-bind
+    first: Authelia
+    last: Bind
+    loginshell: "/sbin/nologin"
+    passwordexpiration: "2099-01-01 23:59:59"
+    password: "{{ vault_ipa_service_accounts.svc_authelia_bind.password }}"
   - name: svc-infrak8s-vault
     first: Infra
     last: Vault

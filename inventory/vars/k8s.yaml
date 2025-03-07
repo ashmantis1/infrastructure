@@ -14,7 +14,7 @@ vm:
   primary_count: 3
   cpu: 8
   memory: 16384
-  disk_size: 200 # Disk size for root drive of VM in GB
+  disk_size: 300 # Disk size for root drive of VM in GB
   storage_pool: "local-lvm"
   bridge: "svcnet"
   tag: 0
@@ -34,7 +34,7 @@ vm:
 
 
 #Hostname details
-service_name: kube-infra
+service_name: kube
 dns_zone: infra.ashman.world
 
 # RKE2 Variables

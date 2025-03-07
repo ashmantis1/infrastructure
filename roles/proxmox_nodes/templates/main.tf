@@ -32,7 +32,7 @@ resource "proxmox_vm_qemu" "nodes" {
     id = 0
     firewall = var.firewall
     link_down = false
-    model = "e1000"
+    model = "virtio"
     bridge = "${ var.bridge }"
     tag = var.tag
   }
