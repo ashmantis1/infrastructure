@@ -34,7 +34,7 @@ vm:
 
 
 #Hostname details
-service_name: kube
+service_name: kube-infra
 dns_zone: infra.ashman.world
 
 # RKE2 Variables
@@ -59,7 +59,7 @@ rke2_cni:
 rke2_kube_apiserver_args:
  - --oidc-client-id=kubelogin
  - --oidc-groups-claim=groups
- - --oidc-issuer-url=https://dex.infra.k8s.ashman.world
+ - --oidc-issuer-url=https://auth.infra.k8s.ashman.world
  - --oidc-username-claim=email
 disable_kube_proxy: true
 #k8s_node_label:
