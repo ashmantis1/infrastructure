@@ -6,6 +6,7 @@
     ansible_ssh_pass: "{{ vault_ipa_service_accounts.svc_ansible_infra.password }}"
     ansible_become_pass: "{{ vault_ipa_service_accounts.svc_ansible_infra.password }}"
   gather_facts: false 
+  become: true
   tasks:
     - debug:
         msg: "{{ ansible_user }}"
