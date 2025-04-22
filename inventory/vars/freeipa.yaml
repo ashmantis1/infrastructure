@@ -307,9 +307,9 @@ ipa_automember_rules:
     inclusive:
       - key: fqdn
         expression: "^.*.infra.ashman.world$"
-    exclusive:
-      - key: fqdn
-        expression: "^ipa.*.infra.ashman.world$"
+        #    exclusive:
+        #      - key: fqdn
+        #        expression: "^ipa.*.infra.ashman.world$"
   - name: infra-admins
     description: "Automember condition for infra-admins"
     automember_type: group
