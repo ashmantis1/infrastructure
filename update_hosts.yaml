@@ -8,9 +8,6 @@
   gather_facts: true 
   become: true
   tasks:
-    - debug:
-        msg: "{{ ansible_user }}"
-        
     - name: Update host
       ansible.builtin.dnf:
         name: "*"
