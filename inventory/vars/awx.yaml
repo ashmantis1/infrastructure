@@ -9,8 +9,9 @@ controller_projects:
   - name: Infrastructure
     organization: "{{ organization }}"
     scm_type: git
-    scm_url: "https://github.com/ashmantis1/infrastructure.git"
+    scm_url: "https://gitlab.apps.ashman.world/infra/iac/infrastructure.git"
     scm_update_on_launch: true
+    credential: gitlab-infra
   - name: Inventories
     organization: "{{ organization }}"
     scm_type: git
@@ -49,4 +50,27 @@ controller_credentials:
     organization: "{{ organization }}"
     credential_type: Proxmox-API-Token
     inputs:
-      token: "{{ vault_awx.proxmox_api_token }}"
+      token: "{{ vault_awx.credentials.proxmox_api_token }}"
+  - name: gitlab-infra
+    credential_type: Source Control
+    organization: "{{ organization }}"
+    inputs:
+      username: "awx"
+      password: "{{ vault_awx.credentials.gitlab_infra.password }}"
+  - name: ansible-infra
+    credential_type: Machine
+    organization: "{{ organization }}"
+    inputs:
+      username: "svc-ansible-infra"
+      password: "{{ vault_ipa_service_accounts.svc_ansible_infra.password }}"
+controller_templates:
+  - name: "Update IPA joined hosts"
+    job_type: run
+    inventory: proxmox_hosts
+    project: Infrastructure
+    instance_groups:
+      - infranet
+    credentials:
+      - infra-ansible-vault
+      - ansible-infra
+    playbook: update_hosts.yaml
