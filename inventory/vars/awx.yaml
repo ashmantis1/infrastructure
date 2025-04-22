@@ -64,7 +64,7 @@ controller_credentials:
       username: "svc-ansible-infra"
       password: "{{ vault_ipa_service_accounts.svc_ansible_infra.password }}"
 controller_templates:
-  - name: "Update IPA joined hosts"
+  - name: "Update IPA Joined Hosts"
     job_type: run
     inventory: proxmox_hosts
     project: Infrastructure
@@ -74,3 +74,8 @@ controller_templates:
       - infra-ansible-vault
       - ansible-infra
     playbook: update_hosts.yaml
+controller_schedules:
+  - name: "Weekly Host Update - IPA Joined" 
+    description: "Update IPA Joined hosts weekly" 
+    unified_job_template: "Update IPA Joined Hosts"
+    rrule: "DTSTART:20250101T023000Z RRULE:FREQ=WEEKLY;BYDAY=SU;INTERVAL=1"

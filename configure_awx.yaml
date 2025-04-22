@@ -16,3 +16,5 @@
       when: controller_projects is defined
     - role: infra.aap_configuration.controller_job_templates
       when: controller_templates is defined
+    - role: infra.aap_configuration.controller_schedules
+      when: controller_schedules is defined

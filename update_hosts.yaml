@@ -1,4 +1,4 @@
-- name: Destroy vault infrastructure
+- name: Update IPA joined hosts
   hosts: pve_ipajoined
   vars:
     infra_group: "pve_infra"
