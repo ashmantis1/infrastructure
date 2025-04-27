@@ -44,6 +44,7 @@ network:
     start_ip:
       freeipa: 10
       pihole: 80
+      blocky: 85
       minio: 120
       vault: 130
       execution_node: 135

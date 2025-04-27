@@ -19,4 +19,5 @@ roles:
   - name: robertdebock.core_dependencies
   - name: robertdebock.hashicorp
   - name: robertdebock.vault
-  
+  - name: ngine_io.blocky_dns
+  - name: evrardjp.keepalived 
