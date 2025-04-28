@@ -13,7 +13,7 @@ token_secret: !vault |
           3530653561346361313936376531343131663464636166363361
 want_facts: true
 want_proxmox_nodes_ansible_host: false
-exclude_nodes: true
+exclude_nodes: false
 keyed_groups:
   - key: proxmox_tags_parsed
     separator: ""

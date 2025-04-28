@@ -1,0 +1,74 @@
+ansible_user: cloud-user
+ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+vm:
+  target_nodes: ["vm"] # List of nodes to deploy the masters to must match master count (max )
+  template: fedora42
+  count: 1
+  primary_count: 1
+  cpu: 4
+  memory: 8196
+  disk_size: 30 # Disk size for root drive of VM in GB
+  storage_pool: "local-lvm"
+  bridge: "vmbr0"
+  tag: 0
+  tags: "infra"
+  dns_server: "1.1.1.1 8.8.8.8"
+  search_domain: cbr.ashman.world
+  ssh_pub_key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF6leLiXjd46rW2/bKTyFtEBXv8A47Ti0kd49CcexgLy asher@fedora
+  network_gateway: "{{ network.infra_cbr.gateway }}"
+  network_subnet: "{{ network.infra_cbr.subnet }}"
+  network_mask: "{{ network.infra_cbr.mask }}"
+  network_start_ip: "{{ network.infra_cbr.start_ip.k8s }}"
+  description: "Minio hosts deployed by terraform"
+  additional_networks: []
+
+service_name: k8s-cbr
+dns_zone: cbr.ashman.world
+
+hostname: "{{ service_name }}01.{{ dns_zone }}"
+
+rke2_ha_mode: false
+rke2_ha_mode_keepalived: false
+rke2_ha_mode_kubevip: true
+rke2_api_ip: 10.10.0.60
+rke2_kubevip_cloud_provider_enable: false
+rke2_kubevip_svc_enable: false
+rke2_version: v1.32.3+rke2r1 
+#rke2_loadbalancer_ip_range:
+#  range-global: 10.110.0.200-10.110.0.254
+rke2_custom_manifests:
+  - templates/rke2-cilium-config.yaml
+  #  - templates/cilium-l2-policy.yaml
+  #  - templates/cilium-lb-pool.yaml
+  #  - templates/cilium-host-access-policy.yaml
+rke2_cni:
+  - multus
+  - cilium
+
+rke2_kube_apiserver_args:
+ - --oidc-client-id=kubelogin
+ - --oidc-groups-claim=groups
+ - --oidc-issuer-url=https://auth.k8s.cbr.ashman.world
+ - --oidc-username-claim=email
+disable_kube_proxy: true
+#k8s_node_label:
+#  - node-access: minimum-access
+rke2_selinux: false
+rke2_disable:
+  - rke2-metrics-server
+  - rke2-ingress-nginx
+rke2_cluster_group_name: pve_k8s_cbr
+rke2_servers_group_name: pve_k8s_cbr_primary
+rke2_agents_group_name: pve_k8s_cbr_secondary
+rke2_download_kubeconf: true
+rke2_download_kubeconf_path: /home/asher/.kube
+rke2_download_kubeconf_file_name: rke2-cbr-kubeconfig-tmp-admin.yaml
+
+rke2_interface: eth0
+bind_address: "{{ hostvars[inventory_hostname]['ansible_' + rke2_interface]['ipv4']['address'] }}"
+
+rke2_server_options:
+  - "node-ip: {{ bind_address }}"
+  #rke2_agent_options:
+  #  - "node-ip: {{ rke2_bind_address }}"
+

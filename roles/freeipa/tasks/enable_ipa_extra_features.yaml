@@ -4,7 +4,9 @@
   block: 
   - name: Enable ACME
     ansible.builtin.shell: ipa-acme-manage enable
+    ignore_errors: true
 
   - name: Enable ACME pruning
     ansible.builtin.shell: ipa-acme-manage pruning --enable --cron "0 0 1 * *"
     when: ipaserver_random_serial_numbers
+    ignore_errors: true

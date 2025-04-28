@@ -27,6 +27,7 @@ vm:
   network_mask: "{{ network.infra.mask }}"
   network_start_ip: "{{ network.infra.start_ip.pihole }}"
   description: "Pihole hosts deployed by terraform"
+  additional_networks: []
 
 #Hostname details
 service_name: pihole

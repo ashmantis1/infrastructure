@@ -1,0 +1,43 @@
+- name: Deploy Blocky infrastructure
+  hosts: localhost
+  vars_files:
+    - inventory/vars/global/cbr-site.yaml
+    - inventory/vars/wireguard-cbr.yaml
+  tasks:
+    - name: Deploy nodes on proxmox
+      ansible.builtin.include_role:
+        name: proxmox_nodes
+      vars:
+        state: present
+
+    - meta: refresh_inventory
+
+- name: Deploy Wireguard
+  hosts: pve_wireguard_cbr
+  become: true
+  gather_facts: true
+  vars_files:
+    - inventory/vars/wireguard-cbr.yaml
+  vars:
+    pip_install_packages:
+      - name: docker
+  roles:
+    - geerlingguy.pip
+    #    - geerlingguy.docker
+  tasks:
+    - name: Allow ports
+      ansible.builtin.firewalld:
+        port: "{{ item }}"
+        permanent: true
+        state: enabled
+      loop:
+        - 3369/udp
+        - 80/tcp
+        - 443/tcp
+        - "{{ wireguard_port.tcp }}/tcp"
+        - "{{ wireguard_port.udp }}/udp"
+
+    - name: Install wg-easy
+      ansible.builtin.include_role:
+        name: wg_easy
+    

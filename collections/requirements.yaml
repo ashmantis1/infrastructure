@@ -9,6 +9,7 @@ collections:
   - name: community.hashi_vault
   - name: infra.aap_configuration
   - name: awx.awx
+  - name: community.docker
 roles:
   - name: lablabs.rke2
   - name: ricsanfre.minio
@@ -21,3 +22,5 @@ roles:
   - name: robertdebock.vault
   - name: ngine_io.blocky_dns
   - name: evrardjp.keepalived 
+  - name: geerlingguy.pip
+  - name: geerlingguy.docker

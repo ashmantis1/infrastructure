@@ -27,7 +27,7 @@ vm:
 service_name: blocky
 dns_zone: infra.ashman.world
 
-vrrp_ip: 10.110.0.90/24
+vrrp_ip: "{{ network.infra.static_ips.blocky_keepalived }}"
 
 blocky__version: v0.25
 
@@ -157,11 +157,12 @@ blocky__upstreams:
     - 8.8.8.8
     - 8.8.4.4
 
+ipa_dns_server: 10.110.0.110
 ipa01_dns_server: 10.110.0.10
 ipa02_dns_server: 10.110.0.11
 
 blocky__custom_domain:
-  ashman.world: "{{ ipa01_dns_server }}"
+  ashman.world: "{{ ipa_dns_server }}"
 
 blocky_host_dns_server:
   - "{{ ipa01_dns_server }}"

@@ -28,7 +28,7 @@ vm:
 #Hostname details
 service_name: ipa
 dns_zone: infra.ashman.world
-
+vrrp_ip: "{{ network.infra.static_ips.ipa_keepalived }}"
 # IPA Server Details
 ipaserver_domain: infra.ashman.world
 ipaserver_realm: INFRA.ASHMAN.WORLD
@@ -65,6 +65,11 @@ ipa_dns:
       dynamic_update: true
       allow_sync_ptr: true
   zones:
+    - name: cbr.ashman.world
+      dynamic_update: true
+      allow_sync_ptr: true
+      skip_overlap_check: false
+      update_policy: ""
     - name: svc.ashman.world
       dynamic_update: true
       allow_sync_ptr: true
@@ -86,6 +91,12 @@ ipa_dns:
       skip_overlap_check: true
       update_policy: ""
   records:
+    - zone_name: infra.ashman.world
+      name: ipa
+      record_type: A
+      record_ttl: 1
+      record_value:
+        - "{{ network.infra.static_ips.ipa_keepalived }}"
     - zone_name: infra.ashman.world
       name: qdev01
       record_type: A
@@ -146,6 +157,11 @@ ipa_dns:
       record_type: A
       record_value:
         - 10.110.0.11
+    - zone_name: cbr.ashman.world
+      name: vm
+      record_type: A
+      record_value:
+        - 10.10.0.200
           
 
 ipa_service_accounts:

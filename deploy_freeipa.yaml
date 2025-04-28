@@ -87,3 +87,17 @@
     - name: Configure IPA
       ansible.builtin.include_role:
         name: freeipa
+
+    - name: Install keepalived
+      ansible.builtin.include_role:
+        name: evrardjp.keepalived
+      vars:
+        keepalived_show_ansible_managed: true
+        keepalived_instances:
+          internal:
+            interface: "{{ ansible_default_ipv4.interface }}"
+            state: "{{ 'MASTER' if ('pve_ipa_primary' in group_names) else 'BACKUP' }}"
+            virtual_router_id: "{{ vrrp_id | default(42) }}"
+            priority: "{{ '100' if ('pve_ipa_primary' in group_names) else '200'}}"
+            vips:
+              - "{{ vrrp_ip }} dev {{ ansible_default_ipv4.interface }}"

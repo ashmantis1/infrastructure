@@ -1,0 +1,55 @@
+- name: Deploy K8S infrastructure
+  hosts: localhost
+  vars_files:
+    - inventory/vars/global/cbr-site.yaml
+    - inventory/vars/k8s-cbr.yaml
+  tasks:
+    - name: Deploy nodes on proxmox
+      ansible.builtin.include_role:
+        name: proxmox_nodes
+      vars:
+        state: present
+
+    - meta: refresh_inventory
+
+- name: Deploy K8S
+  hosts: pve_k8s_cbr
+  become: true
+  gather_facts: true
+  vars_files:
+    - inventory/vars/global/cbr-site.yaml
+    - inventory/vars/k8s-cbr.yaml
+  tasks:
+    - name: Disable firewalld
+      ansible.builtin.systemd_service:
+        name: firewalld
+        enabled: false
+        state: stopped
+        masked: true
+
+    - name: Install node requirements
+      ansible.builtin.package:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - iscsi-initiator-utils
+        - cryptsetup
+
+    - name: Start and enable services
+      ansible.builtin.systemd_service:
+        name: "{{ item }}"
+        enabled: true
+        state: started
+      loop:
+        - iscsid
+
+    - name: Enable dm_crypt kernel module
+      community.general.modprobe:
+        name: dm_crypt
+        state: present
+        persistent: present
+
+    - name: Deploy RKE2
+      ansible.builtin.include_role:
+        name: lablabs.rke2
+

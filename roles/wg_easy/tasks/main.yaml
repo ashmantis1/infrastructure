@@ -1,0 +1,14 @@
+- name: Create wg-easy directory
+  ansible.builtin.file:
+    state: directory
+    path: "{{ wg_easy_dir }}"
+
+- name: Template docker compose file
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ wg_easy_dir }}/docker-compose.yaml"
+
+- name: Docker compose up
+  community.docker.docker_compose_v2:
+    project_src: "{{ wg_easy_dir }}"
+    state: present

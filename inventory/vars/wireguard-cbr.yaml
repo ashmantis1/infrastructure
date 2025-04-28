@@ -1,0 +1,31 @@
+ansible_user: cloud-user
+ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+vm:
+  target_nodes: ["vm"] # List of nodes to deploy the masters to must match master count (max )
+  template: fedora42
+  count: 1
+  primary_count: 1
+  cpu: 2
+  memory: 2048
+  disk_size: 30 # Disk size for root drive of VM in GB
+  storage_pool: "local-lvm"
+  bridge: "vmbr0"
+  tag: 0
+  tags: "infra"
+  dns_server: "1.1.1.1 8.8.8.8"
+  search_domain: cbr.ashman.world
+  ssh_pub_key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF6leLiXjd46rW2/bKTyFtEBXv8A47Ti0kd49CcexgLy asher@fedora
+  network_gateway: "{{ network.infra_cbr.gateway }}"
+  network_subnet: "{{ network.infra_cbr.subnet }}"
+  network_mask: "{{ network.infra_cbr.mask }}"
+  network_start_ip: "{{ network.infra_cbr.start_ip.wireguard }}"
+  description: "Wireguard hosts deployed by terraform"
+  additional_networks: []
+
+service_name: wireguard-cbr
+dns_zone: cbr.ashman.world
+
+wireguard_port: 
+  udp: 51820
+  tcp: 51821
+

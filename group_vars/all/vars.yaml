@@ -20,6 +20,7 @@ ansible_ssh_pass: !vault |
           30383734633031636230613732623961646139333738363865613964376335376338
 
 node_templates:
+  # Melbourne site
   vm01:
     fedora41: 9000
     debian12: 9100
@@ -27,6 +28,9 @@ node_templates:
     fedora41: 9001
   vm03:
     fedora41: 9002
+  # Canberra site
+  vm:
+    fedora42: 9000
 
 network:
   svc:
@@ -40,6 +44,9 @@ network:
     subnet: "10.110.0.0"
     mask: "24"
     gateway: "10.110.0.1"
+    static_ips:
+      ipa_keepalived: "10.110.0.110"
+      blocky_keepalived: "10.110.0.90"
     # Super rough IPAM lol
     start_ip:
       freeipa: 10
@@ -48,4 +55,12 @@ network:
       minio: 120
       vault: 130
       execution_node: 135
+  infra_cbr:
+    subnet: "10.10.0.0"
+    mask: "16"
+    gateway: "10.10.0.1"
+    # Super rough IPAM lol
+    start_ip:
+      wireguard: 50
+      k8s: 60
 
