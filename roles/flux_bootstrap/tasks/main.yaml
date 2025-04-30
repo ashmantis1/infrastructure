@@ -1,0 +1,6 @@
+- name: Install flux binary
+  ansible.builtin.include_tasks: install_flux.yaml
+
+- name: Bootstrap flux
+  ansible.builtin.include_tasks: bootstrap_flux.yaml
+

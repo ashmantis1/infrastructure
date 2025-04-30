@@ -10,6 +10,7 @@ collections:
   - name: infra.aap_configuration
   - name: awx.awx
   - name: community.docker
+  - name: kubernetes.core
 roles:
   - name: lablabs.rke2
   - name: ricsanfre.minio

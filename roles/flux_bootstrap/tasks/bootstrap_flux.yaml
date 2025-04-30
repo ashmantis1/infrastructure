@@ -1,0 +1,16 @@
+- name: Bootstrap Flux
+  environment:
+    GITHUB_TOKEN: "{{ github_kubernetes_pat }}"
+  ansible.builtin.shell: |-
+    flux bootstrap github \
+      --owner={{ flux_repo_namespace }} \
+      --repository={{ flux_repo_name }} \
+      --branch=main \
+      --path={{ flux_repo_path }} \
+      --personal \
+      --token-auth \
+      --kubeconfig={{ rke2_download_kubeconf_path }}/{{ rke2_download_kubeconf_file_name }}
+      # --components-extra=image-reflector-controller,image-automation-controller
+  register: flux_out
+  delegate_to: localhost
+  become: false

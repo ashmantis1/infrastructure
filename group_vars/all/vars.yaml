@@ -56,11 +56,13 @@ network:
       vault: 130
       execution_node: 135
   infra_cbr:
-    subnet: "10.10.0.0"
-    mask: "16"
-    gateway: "10.10.0.1"
+    subnet: "10.210.0.0"
+    mask: "22"
+    gateway: "10.210.0.1"
     # Super rough IPAM lol
     start_ip:
       wireguard: 50
       k8s: 60
+      freeipa: 10
 
+site: "" 

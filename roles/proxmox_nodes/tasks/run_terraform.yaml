@@ -6,7 +6,7 @@
     complex_vars: true
     backend_config:
       bucket: "{{ s3.bucket }}"
-      key: "{{ service_name }}"
+      key: "{{ service_name }}{{ '-' if site }}{{ site | default('')}}"
       access_key: "{{ s3.access_key }}"
       secret_key: "{{ s3.secret_key }}"
       region: 'auto'

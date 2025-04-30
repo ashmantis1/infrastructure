@@ -19,9 +19,9 @@ keyed_groups:
     separator: ""
     prefix: pve-
 groups:
-  k8s_cluster: "'kube-cbr' in (proxmox_tags_parsed|list)"
-  k8s_masters: "'kube-cbr-primary' in (proxmox_tags_parsed|list)"
-  k8s_workers: "'kube-cbr-secondary' in (proxmox_tags_parsed|list)"
+  k8s_cluster: "'kube' in (proxmox_tags_parsed|list)"
+  k8s_masters: "'kube-primary' in (proxmox_tags_parsed|list)"
+  k8s_workers: "'kube-secondary' in (proxmox_tags_parsed|list)"
 compose:
   ansible_host: proxmox_agent_interfaces[1]["ip-addresses"][0].split('/')[0]
   ansible_ssh_user: cloud-user

@@ -1,0 +1,23 @@
+- name: Get latest Flux version
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/fluxcd/flux2/releases/latest
+    return_content: true
+  register: flux_latest
+
+- name: Check if Flux is installed
+  ansible.builtin.stat:
+    path: /usr/local/bin/flux
+  register: flux_installed
+
+- name: Check current Flux version
+  ansible.builtin.shell: flux --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+'
+  register: flux_current
+  when: flux_installed.stat.exists
+
+- name: Install Flux
+  become: true
+  ansible.builtin.unarchive:
+    src: "https://github.com/fluxcd/flux2/releases/download/{{ flux_latest.json.tag_name }}/flux_{{ flux_latest.json.tag_name | regex_replace('^v', '') }}_linux_amd64.tar.gz"
+    dest: /usr/local/bin
+    remote_src: true
+  when: not flux_installed.stat.exists or flux_current.stdout != flux_latest.json.tag_name | regex_replace('^v', '')

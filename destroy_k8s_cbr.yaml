@@ -1,0 +1,11 @@
+- name: Destroy K8S CBR infrastructure
+  hosts: localhost
+  vars_files:
+    - inventory/vars/sites/cbr/global.yaml
+    - inventory/vars/sites/cbr/k8s.yaml
+  tasks:
+    - name: Deploy nodes on proxmox
+      ansible.builtin.include_role:
+        name: proxmox_nodes
+      vars:
+        state: absent

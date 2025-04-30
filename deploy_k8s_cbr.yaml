@@ -1,8 +1,8 @@
 - name: Deploy K8S infrastructure
   hosts: localhost
   vars_files:
-    - inventory/vars/global/cbr-site.yaml
-    - inventory/vars/k8s-cbr.yaml
+    - inventory/vars/sites/cbr/global.yaml
+    - inventory/vars/sites/cbr/k8s.yaml
   tasks:
     - name: Deploy nodes on proxmox
       ansible.builtin.include_role:
@@ -10,15 +10,25 @@
       vars:
         state: present
 
+    - name: Wait for each host to be joined in IPA
+      ansible.builtin.include_role:
+        name: wait_host_joined
+      vars:
+        joined_hosts: "{{ groups['pve_kube'] | list }}" 
+
+    - name: Short delay for final stages of join
+      ansible.builtin.pause:
+        seconds: 5
+
     - meta: refresh_inventory
 
 - name: Deploy K8S
-  hosts: pve_k8s_cbr
+  hosts: pve_kube
   become: true
   gather_facts: true
   vars_files:
-    - inventory/vars/global/cbr-site.yaml
-    - inventory/vars/k8s-cbr.yaml
+    - inventory/vars/sites/cbr/global.yaml
+    - inventory/vars/sites/cbr/k8s.yaml
   tasks:
     - name: Disable firewalld
       ansible.builtin.systemd_service:
@@ -52,4 +62,8 @@
     - name: Deploy RKE2
       ansible.builtin.include_role:
         name: lablabs.rke2
+
+    - name: Bootstrap Flux
+      ansible.builtin.include_role:
+        name: flux_bootstrap
 

@@ -1,0 +1,36 @@
+- name: Deploy freeipa infrastructure
+  hosts: localhost
+  vars_files:
+    - inventory/vars/sites/cbr/global.yaml
+    - inventory/vars/sites/cbr/freeipa.yaml
+  tasks:
+    - name: Deploy nodes on proxmox
+      ansible.builtin.include_role:
+        name: proxmox_nodes
+      vars:
+        state: present
+
+    - meta: refresh_inventory
+
+    - name: Wait for each host to be joined in IPA
+      ansible.builtin.include_role:
+        name: wait_host_joined
+      vars:
+        joined_hosts: "{{ groups['pve_ipa'] | list }}" 
+
+    - name: Short delay for final stages of join
+      ansible.builtin.pause:
+        seconds: 5
+
+- name: Deploy freeipa replica
+  hosts: pve_ipa
+  become: true
+  vars_files:
+    - inventory/vars/sites/cbr/global.yaml
+    - inventory/vars/sites/cbr/freeipa.yaml
+  tasks:
+    - name: Setup IPA Replica
+      ansible.builtin.include_role:
+        name: freeipa.ansible_freeipa.ipareplica
+      vars:
+        state: present

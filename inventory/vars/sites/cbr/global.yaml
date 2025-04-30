@@ -1,5 +1,7 @@
-proxmox_host: "vm.cbr.ashman.world:8006/api2/json"
+proxmox_host: "vm.cbr.infra.ashman.world:8006/api2/json"
 proxmox_user: "root@pam!ansible"
 proxmox_tls_insecure: true
 proxmox_password: "{{ vault_proxmox_cbr_password }}"
 proxmox_datastore_id: "local-lvm"
+
+site: "cbr"

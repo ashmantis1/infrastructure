@@ -9,7 +9,7 @@ vm:
   count: 3
   primary_count: 1
   cpu: 4
-  memory: 8196
+  memory: 4096
   disk_size: 30 # Disk size for root drive of VM in GB
   storage_pool: "local-lvm"
   bridge: "vmbr0"
@@ -235,6 +235,14 @@ ipa_service_accounts:
     password: "{{ vault_ipa_service_accounts.svc_svck8s_vault.password }}"
     groups:
       - vault-svc-secrets-ro
+  - name: svc-cbrk8s-vault
+    first: KubeCBR
+    last: Vault
+    loginshell: "/sbin/nologin"
+    passwordexpiration: "2099-01-01 23:59:59"
+    password: "{{ vault_ipa_service_accounts.svc_cbrk8s_vault.password }}"
+    groups:
+      - vault-kube-cbr-secrets-ro
   - name: svc-ansible-awx
     first: Svc
     last: Vault
@@ -286,6 +294,7 @@ ipa_services_groups:
   - name: kasm-admins
   - name: vault-infra-secrets-ro
   - name: vault-svc-secrets-ro
+  - name: vault-kube-cbr-secrets-ro
 
 ipa_usergroups:
   - name: services-admins
