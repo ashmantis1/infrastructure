@@ -83,7 +83,7 @@ controller_templates:
     credentials:
       - infra-ansible-vault
       - ansible-infra
-    playbook: deploy_vault.yaml
+    playbook: update_vault.yaml
 controller_schedules:
   - name: "Weekly Host Update - IPA Joined" 
     description: "Update IPA Joined hosts weekly" 

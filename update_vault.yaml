@@ -1,0 +1,18 @@
+- name: Update Vault to latest version
+  hosts: vault
+  become: true
+  gather_facts: false
+  vars_files:
+    - inventory/vars/vault.yaml
+  vars:
+    vault_version: latest
+    ansible_user: svc-ansible-infra
+    ansible_ssh_pass: "{{ vault_ipa_service_accounts.svc_ansible_infra.password }}"
+    ansible_become_pass: "{{ vault_ipa_service_accounts.svc_ansible_infra.password }}"
+  roles:
+    - role: set_vault_version
+    - role: robertdebock.bootstrap
+    - role: robertdebock.core_dependencies
+    - role: robertdebock.hashicorp
+    - role: robertdebock.vault
+
