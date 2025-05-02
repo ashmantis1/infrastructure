@@ -77,7 +77,8 @@ vault_ldap:
       policy: svc-ro
     - ldap_group: vault-kube-cbr-secrets-ro
       policy: kube-cbr-ro
-vault_version: "1.18.4"
+vault_version: "latest"
+vault_release_endpoint: "https://api.github.com/repos/hashicorp/vault/releases/latest"
 vault_data_directory: /opt/vault
 vault_s3_enabled: true
 vault_s3_access_key: "{{ vault_vault_s3.access_key }}"

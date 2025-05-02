@@ -74,6 +74,16 @@ controller_templates:
       - infra-ansible-vault
       - ansible-infra
     playbook: update_hosts.yaml
+  - name: "Update Vault version"
+    job_type: run
+    inventory: proxmox_hosts
+    project: Infrastructure
+    instance_groups:
+      - infranet
+    credentials:
+      - infra-ansible-vault
+      - ansible-infra
+    playbook: deploy_vault.yaml
 controller_schedules:
   - name: "Weekly Host Update - IPA Joined" 
     description: "Update IPA Joined hosts weekly" 

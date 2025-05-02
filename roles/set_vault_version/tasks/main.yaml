@@ -1,0 +1,19 @@
+- name: Set latest vault version
+  when: vault_version == 'latest'
+  block:
+
+    - name: Get latest vault version from api
+      ansible.builtin.uri:
+        url: "{{ vault_release_endpoint }}"
+        method: GET
+        body_format: json
+        return_content: true
+      register: vault_latest_ver
+
+    - name: Set vault version variables
+      ansible.builtin.set_fact:
+        vault_version: "{{ vault_latest_ver.json.tag_name.split('v').1 }}"
+    
+    - name: Print vault version
+      ansible.builtin.debug:
+        var: vault_version

@@ -28,6 +28,7 @@
   vars_files:
     - inventory/vars/vault.yaml
   roles:
+    - role: set_vault_version
     - role: robertdebock.bootstrap
     - role: robertdebock.core_dependencies
     - role: robertdebock.hashicorp
