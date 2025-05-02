@@ -9,7 +9,7 @@ vm:
   count: 3
   primary_count: 1
   cpu: 4
-  memory: 4096
+  memory: 8196
   disk_size: 30 # Disk size for root drive of VM in GB
   storage_pool: "local-lvm"
   bridge: "vmbr0"
@@ -219,6 +219,12 @@ ipa_service_accounts:
     loginshell: "/sbin/nologin"
     passwordexpiration: "2099-01-01 23:59:59"
     password: "{{ vault_ipa_service_accounts.svc_authelia_bind.password }}"
+  - name: svc-synology-bind
+    first: Synology
+    last: Bind
+    loginshell: "/sbin/nologin"
+    passwordexpiration: "2099-01-01 23:59:59"
+    password: "{{ vault_ipa_service_accounts.svc_synology_bind.password }}"
   - name: svc-infrak8s-vault
     first: Infra
     last: Vault

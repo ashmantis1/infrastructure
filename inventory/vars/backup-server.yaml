@@ -1,0 +1,54 @@
+ansible_user: svc-ansible-infra
+ansible_ssh_pass: "{{ vault_ipa_service_accounts.svc_ansible_infra.password }}"
+ansible_become_pass: "{{ vault_ipa_service_accounts.svc_ansible_infra.password }}"
+ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+vm:
+  target_nodes: ["vm01"] # List of nodes to deploy the masters to must match master count (max )
+  template: fedora41
+  count: 1
+  primary_count: 1
+  cpu: 2
+  memory: 2048
+  disk_size: 30 # Disk size for root drive of VM in GB
+  storage_pool: "local-lvm"
+  bridge: "vmbr0"
+  tag: 4000
+  tags: "ipajoined,infra"
+  dns_server: "10.110.0.10 10.110.0.11 10.110.0.12"
+  search_domain: infra.ashman.world
+  ssh_pub_key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF6leLiXjd46rW2/bKTyFtEBXv8A47Ti0kd49CcexgLy asher@fedora
+  network_gateway: "{{ network.infra.gateway }}"
+  network_subnet: "{{ network.infra.subnet }}"
+  network_mask: "{{ network.infra.mask }}"
+  network_start_ip: "{{ network.infra.start_ip.backup }}"
+  description: "Backup server host deployed by terraform"
+  additional_networks: []
+
+service_name: backup
+dns_zone: infra.ashman.world
+
+backup_src_dir: "/opt/backup-src"
+
+smb_source: "//storage.infra.ashman.world"
+smb_username: svc-backup-ro
+smb_password: "{{ vault_restic.synology_smb_password }}"
+smb_opts: "username={{ smb_username }},password={{ smb_password }},file_mode=0777"
+
+backup_paths:
+- name: infra
+  sub_paths:
+  - "MinIO/backend/cloudnative-pg-backups/outline-postgres-backup-01"
+  - "MinIO/backend/gitlab-backups"
+  - "MinIO/backend/longhorn-backups"
+  - "MinIO/backend/vault"
+- name: General
+  sub_paths: []
+
+
+restic_default_folders: []
+restic_ssh_enabled: false
+restic_repository: "s3://minio.cbr.k8s.ashman.world/backup"
+restic_aws_access_key_id: svc-backup-minio
+restic_aws_secret_access_key: "{{ vault_restic.bucket_secret }}"
+restic_folders: []
+restic_password: "{{ vault_restic.repo_secret }}"

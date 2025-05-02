@@ -10,7 +10,7 @@ vm:
   primary_count: 1
   cpu: 4
   memory: 8196
-  disk_size: 30 # Disk size for root drive of VM in GB
+  disk_size: 60 # Disk size for root drive of VM in GB
   storage_pool: "local-lvm"
   bridge: "infranet"
   tag: 0
@@ -34,6 +34,8 @@ flux_repo_name: "kubernetes"
 flux_repo_path: "kubernetes/clusters/kube-cbr"
 github_kubernetes_pat: "{{ vault_github_kubernetes_pat }}"
 
+external_secrets_password: "{{ vault_ipa_service_accounts.svc_cbrk8s_vault.password }}"
+
 rke2_ha_mode: true
 rke2_ha_mode_keepalived: false
 rke2_ha_mode_kubevip: true
@@ -48,13 +50,12 @@ rke2_custom_manifests:
   #  - templates/cilium-lb-pool.yaml
   #  - templates/cilium-host-access-policy.yaml
 rke2_cni:
-  - multus
   - cilium
 
 rke2_kube_apiserver_args:
  - --oidc-client-id=kubelogin
  - --oidc-groups-claim=groups
- - --oidc-issuer-url=https://auth.k8s.cbr.infra.ashman.world
+ - --oidc-issuer-url=https://auth.cbr.k8s.ashman.world
  - --oidc-username-claim=email
 disable_kube_proxy: true
 #k8s_node_label:
