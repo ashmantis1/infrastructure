@@ -3,6 +3,8 @@ stages:
 
 job_using_vault:
   stage: test
+  variables:
+    VAULT_AUTH_ROLE: gitlab-infra-repo-ro
   id_tokens:
     VAULT_ID_TOKEN:
       aud: $VAULT_SERVER_URL
