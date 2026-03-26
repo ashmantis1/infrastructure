@@ -12,8 +12,8 @@ job_using_vault:
     TOKEN:
       vault:
         engine:
-          name: kv
-          path: gitlab/projects/infra/iac/infrastructure
+          name: kv-v2
+          path: kv/gitlab/projects/infra/iac/infrastructure
         path: proxmox_auth
         field: token
       file: false
