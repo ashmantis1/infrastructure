@@ -44,7 +44,7 @@ rke2_ha_mode_kubevip: true
 rke2_api_ip: 10.140.2.0
 rke2_kubevip_cloud_provider_enable: false
 rke2_kubevip_svc_enable: false
-rke2_version: v1.32.0+rke2r1 
+rke2_version: v1.33.2+rke2r1 
 #rke2_loadbalancer_ip_range:
 #  range-global: 10.110.0.200-10.110.0.254
 rke2_custom_manifests:

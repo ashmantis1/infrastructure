@@ -1,0 +1,4 @@
+- name: Create the IPA backup job
+  ansible.builtin.template:
+    src: backup-job.service.j2
+    dest: /etc/systemd/system/backup-job.service

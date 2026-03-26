@@ -52,3 +52,5 @@ restic_aws_access_key_id: svc-backup-minio
 restic_aws_secret_access_key: "{{ vault_restic.bucket_secret }}"
 restic_folders: []
 restic_password: "{{ vault_restic.repo_secret }}"
+restic_prune: false
+restic_forget: false
