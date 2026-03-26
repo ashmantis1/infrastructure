@@ -3,13 +3,13 @@ stages:
 
 job_using_vault:
   stage: test
-  variables:
-    VAULT_AUTH_ROLE: gitlab-project-infra-iac-infrastructure
+#  variables:
+#    VAULT_AUTH_ROLE: gitlab-project-infra-iac-infrastructure
   id_tokens:
     VAULT_ID_TOKEN:
       aud: $VAULT_SERVER_URL
   secrets:
     TOKEN:
-      vault: gitlab/projects/infra/iac/infrastructure/proxmox_auth/token@kv
+      vault: gitlab/projects/infra/iac/infrastructure/proxmox_auth/token@secret
   script:
     - echo $TOKEN
