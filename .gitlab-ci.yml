@@ -10,9 +10,6 @@ job_using_vault:
       aud: $VAULT_SERVER_URL
   secrets:
     TOKEN:
-      vault:
-        path: kv/gitlab/projects/infra/iac/infrastructure/proxmox_auth
-        field: token
-      file: false
+      vault: gitlab/projects/infra/iac/infrastructure/proxmox_auth/token@kv
   script:
     - echo $TOKEN
