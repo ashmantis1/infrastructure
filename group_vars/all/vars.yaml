@@ -1,7 +1,7 @@
 ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
 #Proxmox details
 proxmox_host: "vm01.infra.ashman.world:8006/api2/json"
-proxmox_user: "root@pam!ansible"
+proxmox_user: "root@pam!ansible-new"
 proxmox_tls_insecure: true
 proxmox_password: "{{ vault_proxmox_password }}"
 proxmox_datastore_id: "local-lvm"

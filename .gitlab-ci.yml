@@ -1,0 +1,19 @@
+stages:
+  - test
+
+job_using_vault:
+  stage: test
+  id_tokens:
+    VAULT_ID_TOKEN:
+      aud: $VAULT_SERVER_URL
+  secrets:
+    TOKEN:
+      vault:
+        engine:
+          name: kv
+          path: gitlab/projects/infra/iac/infrastructure
+        path: proxmox_auth
+        field: token
+      file: false
+  script:
+    - echo $TOKEN
