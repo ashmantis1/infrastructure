@@ -11,5 +11,6 @@ job_using_vault:
   secrets:
     TOKEN:
       vault: infra/iac/infrastructure/proxmox_auth/token@gitlab-cicd
+      file: false
   script:
-    - cat $TOKEN
+    - echo $TOKEN
