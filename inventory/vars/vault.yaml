@@ -40,12 +40,11 @@ vault_svc_account:
   password: "{{ vault_vault_svc_account_password }}"
 
 vault_policies:
-  - name: gitlab-infra-repo-ro
+  - name: gitlab-project-path-ro
     rules:
-      - path: "kv/gitlab/projects/infra/iac/infrastructure/*"
+      - path: !unsafe "gitlab-cicd/data/{{identity.entity.aliases.auth_jwt_8c9c29ec.metadata.project_path}}/*" 
         capabilities:
           - read
-          - list
   - name: infra-ro
     rules:
       - path: "infra/*"

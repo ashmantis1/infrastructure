@@ -10,7 +10,7 @@ job_using_vault:
       aud: $VAULT_SERVER_URL
   secrets:
     TOKEN:
-      vault: infra/iac/kubernetes/test/password@gitlab-cicd
+      vault: infra/iac/infrastructure/proxmox_auth/token@gitlab-cicd
       file: false
   script:
     - echo $TOKEN
