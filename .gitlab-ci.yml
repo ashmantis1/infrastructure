@@ -10,6 +10,6 @@ job_using_vault:
       aud: $VAULT_SERVER_URL
   secrets:
     TOKEN:
-      vault: gitlab/projects/infra/iac/kubernetes/service_token/test@secret
+      vault: $CI_PROJECT_PATH_SLUG/proxmox_auth/token@gitlab-cicd
   script:
     - echo $TOKEN
