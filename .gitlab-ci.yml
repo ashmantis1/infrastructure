@@ -12,4 +12,4 @@ job_using_vault:
     TOKEN:
       vault: infra/iac/infrastructure/proxmox_auth/token@gitlab-cicd
   script:
-    - echo $TOKEN
+    - cat $TOKEN
