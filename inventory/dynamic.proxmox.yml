@@ -1,4 +1,4 @@
-plugin: community.general.proxmox
+plugin: community.proxmox.proxmox
 url: https://10.110.0.50:8006
 validate_certs: false
 user: root@pam

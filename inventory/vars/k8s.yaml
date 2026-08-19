@@ -10,10 +10,10 @@ ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
 vm:
   target_nodes: ["vm01","vm02", "vm03"] # List of nodes to deploy the masters to must match master count (max )
   template: fedora41
-  count: 3
+  count: 1
   primary_count: 3
   cpu: 8
-  memory: 16384
+  memory: 24576
   disk_size: 300 # Disk size for root drive of VM in GB
   storage_pool: "local-lvm"
   bridge: "svcnet"
@@ -44,7 +44,7 @@ rke2_ha_mode_kubevip: true
 rke2_api_ip: 10.140.2.0
 rke2_kubevip_cloud_provider_enable: false
 rke2_kubevip_svc_enable: false
-rke2_version: v1.33.2+rke2r1 
+rke2_version: v1.36.3+rke2r1
 #rke2_loadbalancer_ip_range:
 #  range-global: 10.110.0.200-10.110.0.254
 rke2_custom_manifests:

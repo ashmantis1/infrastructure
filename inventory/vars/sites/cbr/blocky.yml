@@ -2,34 +2,36 @@ ansible_user: svc-ansible-infra
 ansible_ssh_pass: "{{ vault_ipa_service_accounts.svc_ansible_infra.password }}"
 ansible_become_pass: "{{ vault_ipa_service_accounts.svc_ansible_infra.password }}"
 ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+
 vm:
-  target_nodes: ["vm01","vm02","vm03"] # List of nodes to deploy the masters to must match master count (max )
-  template: fedora41
-  count: 3
+  target_nodes: ["vm"] # List of nodes to deploy the masters to must match master count (max )
+  template: fedora44
+  count: 1
   primary_count: 1
   cpu: 2
   memory: 2048
   disk_size: 30 # Disk size for root drive of VM in GB
   storage_pool: "local-lvm"
-  bridge: "vmbr0"
-  tag: 4000
-  tags: "ipajoined,infra"
-  dns_server: "10.110.0.10 10.110.0.11 10.110.0.12"
-  search_domain: infra.ashman.world
+  bridge: "proxmgmt"
+  tag: 0
+  tags: "infra,ipajoined"
+  dns_server: "10.30.0.10"
+  search_domain: cbr.infra.ashman.world
   ssh_pub_key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF6leLiXjd46rW2/bKTyFtEBXv8A47Ti0kd49CcexgLy asher@fedora
-  network_gateway: "{{ network.infra.gateway }}"
-  network_subnet: "{{ network.infra.subnet }}"
-  network_mask: "{{ network.infra.mask }}"
-  network_start_ip: "{{ network.infra.start_ip.blocky }}"
+  network_gateway: "{{ network.infra_cbr.gateway }}"
+  network_subnet: "{{ network.infra_cbr.subnet }}"
+  network_mask: "{{ network.infra_cbr.mask }}"
+  network_start_ip: "{{ network.infra_cbr.start_ip.blocky }}"
   description: "Blocky hosts deployed by terraform"
   additional_networks: []
 
 service_name: blocky
-dns_zone: infra.ashman.world
+site: cbr
+dns_zone: "{{ site }}.infra.ashman.world"
+hostname: "{{ service_name }}01.{{ dns_zone }}"
 
 vrrp_ip: "{{ network.infra.static_ips.blocky_keepalived }}"
 
-eddster_ipa: 10.20.20.10
 blocky__version: v0.25
 
 blocky__blocking_client_groups_block:
@@ -158,15 +160,12 @@ blocky__upstreams:
     - 8.8.8.8
     - 8.8.4.4
 
-ipa_dns_server: 10.110.0.110
+ipa_dns_server: 10.30.0.10
 ipa01_dns_server: 10.110.0.10
 ipa02_dns_server: 10.110.0.11
 
 blocky__custom_domain:
   ashman.world: "{{ ipa_dns_server }}"
-  eddster.com: "{{ eddster_ipa }}"
-  0b.au: "{{ eddster_ipa }}"
-
 
 blocky_host_dns_server:
   - "{{ ipa01_dns_server }}"

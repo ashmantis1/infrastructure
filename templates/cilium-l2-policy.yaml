@@ -4,6 +4,6 @@ metadata:
   name: basic-policy
 spec:
   interfaces:
-  - eth0
+  - ens18
   externalIPs: true
   loadBalancerIPs: true

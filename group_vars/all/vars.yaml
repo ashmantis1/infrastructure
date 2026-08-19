@@ -30,7 +30,7 @@ node_templates:
     fedora41: 9002
   # Canberra site
   vm:
-    fedora42: 9000
+    fedora44: 9000
 
 network:
   svc:
@@ -57,13 +57,14 @@ network:
       vault: 130
       execution_node: 135
   infra_cbr:
-    subnet: "10.210.0.0"
-    mask: "22"
-    gateway: "10.210.0.1"
+    subnet: "10.30.0.0"
+    mask: "24"
+    gateway: "10.30.0.1"
     # Super rough IPAM lol
     start_ip:
       wireguard: 50
       k8s: 60
       freeipa: 10
+      blocky: 20
 
 site: "" 

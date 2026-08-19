@@ -5,17 +5,17 @@ ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
 
 vm:
   target_nodes: ["vm"] # List of nodes to deploy the masters to must match master count (max )
-  template: fedora42
+  template: fedora44
   count: 1
   primary_count: 1
   cpu: 4
-  memory: 8196
+  memory: 4096
   disk_size: 30 # Disk size for root drive of VM in GB
   storage_pool: "local-lvm"
-  bridge: "infranet"
+  bridge: "proxmgmt"
   tag: 0
   tags: "infra,ipajoined"
-  dns_server: "10.110.0.110"
+  dns_server: "10.110.0.10"
   search_domain: cbr.infra.ashman.world
   ssh_pub_key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF6leLiXjd46rW2/bKTyFtEBXv8A47Ti0kd49CcexgLy asher@fedora
   network_gateway: "{{ network.infra_cbr.gateway }}"
@@ -38,3 +38,4 @@ ipareplica_allow_zone_overlap: true
 ipareplica_setup_dns: true
 ipareplica_setup_ca: true
 ipareplica_auto_forwarders: true
+ipareplica_setup_adtrust: true

@@ -1,0 +1,24 @@
+- name: Upgrade Hosts to target fedora release
+  hosts: pve_kube_infra
+  vars:
+    ansible_user: svc-ansible-infra
+    ansible_ssh_pass: "{{ vault_ipa_service_accounts.svc_ansible_infra.password }}"
+    ansible_become_pass: "{{ vault_ipa_service_accounts.svc_ansible_infra.password }}"
+    target_version: 44
+  gather_facts: false 
+  become: true
+  tasks:
+    - name: Update host
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+        update_cache: true
+      become: true
+
+    - name: Download upgrade packages
+      ansible.builtin.command: "sudo dnf system-upgrade download --releasever={{ target_version }} -y"
+
+    - name: Initiate update task
+      ansible.builtin.command: "sudo dnf offline reboot -y"
+      ignore_errors: true
+

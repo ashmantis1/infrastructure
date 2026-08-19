@@ -1,0 +1,94 @@
+- name: Deploy Blocky infrastructure
+  hosts: localhost
+  vars_files:
+    - inventory/vars/sites/cbr/blocky.yml
+    - inventory/vars/sites/cbr/global.yaml
+  tasks:
+    - name: Deploy nodes on proxmox
+      ansible.builtin.include_role:
+        name: proxmox_nodes
+      vars:
+        state: present
+
+    - meta: refresh_inventory
+
+    - name: Wait for each host to be joined in IPA
+      ansible.builtin.include_role:
+        name: wait_host_joined
+      vars:
+        joined_hosts: "{{ groups['pve_blocky'] | list }}" 
+
+    - name: Short delay for final stages of join
+      ansible.builtin.pause:
+        seconds: 15
+
+- name: Deploy Blocky
+  hosts: pve_blocky
+  become: true
+  gather_facts: true
+  vars_files:
+    - inventory/vars/sites/cbr/blocky.yml
+    - inventory/vars/sites/cbr/global.yaml
+  tasks:
+    - name: Allow ports
+      ansible.builtin.firewalld:
+        port: "{{ item }}"
+        permanent: true
+        state: enabled
+      loop:
+        - 4000/tcp
+        - 53/udp
+    
+    - name: Disable resolved
+      ansible.builtin.systemd_service:
+        name: systemd-resolved
+        state: stopped
+        masked: true
+
+    - name: Remove resolv.conf
+      ansible.builtin.file:
+        path: /etc/resolv.conf
+        state: absent
+
+    - name: Touch new resolv
+      ansible.builtin.file:
+        path: /etc/resolv.conf
+        state: touch
+        mode: "644"
+        owner: root
+        group: root
+
+    - name: Insert dns into /etc/resolv.conf
+      ansible.builtin.lineinfile:
+        dest: /etc/resolv.conf
+        line: "nameserver {{ item }}"
+      loop: "{{ blocky_host_dns_server }}"
+
+      #- name: Set SELinux to disabled state
+      #  ansible.posix.selinux:
+      #    state: disabled
+      #  when: ansible_os_family == "RedHat"
+
+    - name: Reload firewalld
+      ansible.builtin.command: firewall-cmd --reload
+      register: process_status
+      changed_when: false
+
+    - name: Install Blocky
+      ansible.builtin.include_role:
+        name: ngine_io.blocky_dns
+    
+    - name: Install keepalived on Primary
+      ansible.builtin.include_role:
+        name: evrardjp.keepalived
+      vars:
+        keepalived_show_ansible_managed: true
+        keepalived_instances:
+          internal:
+            interface: "{{ ansible_default_ipv4.interface }}"
+            state: "{{ 'MASTER' if ('pve_blocky_primary' in group_names) else 'BACKUP' }}"
+            virtual_router_id: "{{ vrrp_id | default(42) }}"
+            priority: "{{ '100' if ('pve_blocky_primary' in group_names) else '200'}}"
+            vips:
+              - "{{ vrrp_ip }} dev {{ ansible_default_ipv4.interface }}"
+

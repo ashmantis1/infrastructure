@@ -1,4 +1,4 @@
-- name: Deploy infrastructure
+- name: Deploy freeipa infrastructure
   hosts: localhost
   vars_files:
     - inventory/vars/freeipa.yaml
@@ -11,19 +11,18 @@
 
     - meta: refresh_inventory
 
-    - name: Add hosts to ipaserver hostgroup
-      ansible.builtin.add_host: 
-        name: "{{ item }}.{{ dns_zone }}"
-        group: ipaserver
-      loop: "{{ groups['freeipaservers'] | list  }}"
+  #  - name: Wait for each host to be joined in IPA
+  #    ansible.builtin.include_role:
+  #      name: wait_host_joined
+  #    vars:
+  #      joined_hosts: "{{ groups['pve_ipa'] | list }}" 
 
-    - name: Wait for hosts to boot up
+    - name: Short delay for final stages of join
       ansible.builtin.pause:
-        seconds: 30
+        seconds: 15
 
-- name: Setup hosts
+- name: Deploy freeipa replica
   hosts: freeipaservers
-  gather_facts: true
   become: true
   vars_files:
     - inventory/vars/freeipa.yaml
@@ -65,41 +64,8 @@
         - net.ipv6.conf.default.disable_ipv6
         - net.ipv6.conf.eth0.disable_ipv6
 
-    - name: Enable Lo IPv6
-      ansible.posix.sysctl:
-        name: "net.ipv6.conf.lo.disable_ipv6"
-        value: 0
-        state: present
-        reload: true
-
-    - name: Setup IPA Master
-      ansible.builtin.include_role:
-        name: freeipa.ansible_freeipa.ipaserver
-      vars:
-        state: present
-      when: inventory_hostname in groups['ipamaster']
-
     - name: Setup IPA Replica
       ansible.builtin.include_role:
         name: freeipa.ansible_freeipa.ipareplica
       vars:
         state: present
-      when: inventory_hostname in groups['ipareplica']
-
-#    - name: Configure IPA
-#      ansible.builtin.include_role:
-#        name: freeipa
-
-    - name: Install keepalived
-      ansible.builtin.include_role:
-        name: evrardjp.keepalived
-      vars:
-        keepalived_show_ansible_managed: true
-        keepalived_instances:
-          internal:
-            interface: "{{ ansible_default_ipv4.interface }}"
-            state: "{{ 'MASTER' if ('pve_ipa_primary' in group_names) else 'BACKUP' }}"
-            virtual_router_id: "{{ vrrp_id | default(42) }}"
-            priority: "{{ '100' if ('pve_ipa_primary' in group_names) else '200'}}"
-            vips:
-              - "{{ vrrp_ip }} dev {{ ansible_default_ipv4.interface }}"

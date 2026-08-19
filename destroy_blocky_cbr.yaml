@@ -1,0 +1,11 @@
+- name: Deploy infrastructure
+  hosts: localhost
+  vars_files:
+    - inventory/vars/sites/cbr/global.yaml
+    - inventory/vars/sites/cbr/blocky.yml
+  tasks:
+    - name: Destroy nodes on proxmox
+      ansible.builtin.include_role:
+        name: proxmox_nodes
+      vars:
+        state: absent

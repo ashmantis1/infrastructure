@@ -20,7 +20,7 @@
 
     - name: Short delay for final stages of join
       ansible.builtin.pause:
-        seconds: 5
+        seconds: 30
 
 - name: Deploy freeipa replica
   hosts: pve_ipa
